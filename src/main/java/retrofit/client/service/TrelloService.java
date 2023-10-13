@@ -1,20 +1,34 @@
 package retrofit.client.service;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
-import utility.url.UrlUtility;
+import model.domain.Board;
+import model.domain.User;
+import retrofit2.Call;
+import retrofit2.http.*;
 
-public class TrelloServiceBuilder {
+import java.util.Map;
 
-    public static TrelloService buildTrelloService() {
-        Retrofit retrofit = buildRetrofit();
-        return retrofit.create(TrelloService.class);
-    }
+public interface TrelloService {
 
-    private static Retrofit buildRetrofit() {
-        return new Retrofit.Builder()
-                .baseUrl(UrlUtility.getBaseUrl())
-                .addConverterFactory(JacksonConverterFactory.create())
-                .build();
-    }
+    @Headers("Accept: application/json")
+    @GET("members/me")
+    Call<User> authorizeUser(@QueryMap Map<String, String> options);
+
+    @Headers("Accept: application/json")
+    @POST("board")
+    Call<Board> createBoard(@QueryMap Map<String, String> queryParameters);
+
+    @Headers("Accept: application/json")
+    @GET("board/{boardId}")
+    Call<Board> getBoardById(@Path("boardId") String boardId,
+                             @QueryMap Map<String, String> queryParameters);
+
+    @Headers("Accept: application/json")
+    @PUT("board/{boardId}")
+    Call<Board> updateBoard(@Path("boardId") String boardId,
+                            @QueryMap Map<String, String> queryParameters);
+
+    @Headers("Accept: application/json")
+    @DELETE("board/{boardId}")
+    Call<Board> deleteBoard(@Path("boardId") String boardId,
+                            @QueryMap Map<String, String> queryParameters);
 }
